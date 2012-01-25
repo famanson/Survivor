@@ -20,6 +20,17 @@ public class LoopingList<E> extends ArrayList<E> {
         if(index<0) index = size() + index;
         return super.get(index);
     }
-
-
+    
+    public void insertBetween(int j, int k, E element)
+    {
+    	// go from j to k in clockwise direction:
+    	int i = j+1;
+    	while (i != k)
+    	{
+    		this.remove(i);
+    		i = (i+1) % this.size();
+    	}
+    	this.add(j+1, element);
+    }
+    
 }
