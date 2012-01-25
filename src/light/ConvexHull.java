@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 
 public class ConvexHull {
-
+	protected List<Vec2> originalPoints; // the relative points
     protected List<Vec2> points;
     protected List<Edge> edges;
     protected Vec2 pos;
@@ -28,6 +28,7 @@ public class ConvexHull {
 
     public ConvexHull(Vec2 pos, List<Vec2> lPoints, float depth, Color c) {
     	//lPoints should be understood as the relative positions of the points with one of them being at the origin
+    	this.originalPoints = lPoints;
         this.points = new LoopingList<Vec2>();
         this.pos = pos;
         this.depth = depth;
@@ -46,6 +47,11 @@ public class ConvexHull {
     public List<Vec2> getPoints()
     {
     	return points;
+    }
+    
+    public List<Vec2> getRelativePoints()
+    {
+    	return originalPoints;
     }
     
     public List<Edge> getEdges()

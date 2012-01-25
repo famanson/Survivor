@@ -102,51 +102,6 @@ public class Map implements SurvivorListener,RenderedMap {
 		return blocksToRender;
 	}
 	
-	protected ConvexHull cluster(Block[] blocks)
-	{
-		// create a convex hull out of the given blocks using the incremental algorithm
-		// assuming these hulls overlap
-		// deal with trivial cases:
-		if (blocks.length == 0)
-			return null;
-		else if (blocks.length == 1)
-			return blocks[0];
-		
-		// First sort the points in the order of x-coordinates
-		Set<Vec2> allPoints = new TreeSet<Vec2>(new PointComparator());
-		for (Block block : blocks)
-		{
-			allPoints.addAll(block.getPoints());
-		}
-		Vec2[] s = (Vec2[]) allPoints.toArray();
-		LoopingList<Vec2> hull = new LoopingList<Vec2>();
-		int n = allPoints.size();
-		int i = 3;
-		// add the first 3 points to the list:
-		hull.add(s[0]);
-		hull.add(s[1]);
-		hull.add(s[2]);
-		
-		while (i < n)
-		{
-			int j = hull.getLastInserted();
-			int k = hull.getLastInserted();
-			while (!Geometry.left(s[i], hull.get(j), hull.get(j+1)))
-			{
-				// remember: j is advanced counter-clockwise
-				j++;
-			}
-			while (!Geometry.left(hull.get(k-1), hull.get(k),s[i]))
-			{
-				// remember: k is advanced clockwise
-				k--;
-			}
-			// now we've reached the boundaries:
-			hull.insertBetween(j, k, s[i]);
-			i++;
-		}
-		return new ConvexHull(s[0], hull, 0.1f, Color.white);
-	}
 	
 	protected ConvexHull joinHulls(ConvexHull h1, ConvexHull h2)
 	{
@@ -172,20 +127,9 @@ public class Map implements SurvivorListener,RenderedMap {
 			points.add(new Vec2(point2.x + deltaX, point2.y + deltaY));
 		}
 		
-		points.addAll(h1.getPoints());
-		return new ConvexHull(h1.getPos(), points, h1.getDepth(), Color.white);
-	}
-	
-	private class PointComparator implements Comparator<Vec2>
-	{
-		@Override
-		public int compare(Vec2 v1, Vec2 v2) {
-			if (v1.x == v2.x)
-				return 0;
-			else if (v1.x > v2.x)
-				return 1;
-			else return -1;
-		}
+		points.addAll(h1.getRelativePoints());
+		List<Vec2> newPoints = Geometry.cluster(points); // make a valid list of points for a new convex hull
+		return new ConvexHull(h1.getPos(), newPoints, h1.getDepth(), Color.white);
 	}
 	
 	public List<Block> allBlocks()
