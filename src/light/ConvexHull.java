@@ -5,6 +5,9 @@
 
 package light;
 
+import geometry.Edge;
+
+import java.util.ArrayList;
 import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
@@ -12,6 +15,7 @@ import org.newdawn.slick.Color;
 public class ConvexHull {
 
     protected List<Vec2> points;
+    protected List<Edge> edges;
     protected Vec2 pos;
     protected float depth;
     protected Color color;
@@ -32,11 +36,21 @@ public class ConvexHull {
         	// translate all the points by v
             this.points.add(new Vec2(v.x + pos.x, v.y + pos.y));
         }
+        this.edges = new ArrayList<Edge>();
+        for (int i = 0; i < points.size(); i++)
+        {
+        	edges.add(new Edge(points.get(i), points.get((i+1)%points.size())));
+        }
     }
     
     public List<Vec2> getPoints()
     {
     	return points;
+    }
+    
+    public List<Edge> getEdges()
+    {
+    	return edges;
     }
     
     public Vec2 getPos()

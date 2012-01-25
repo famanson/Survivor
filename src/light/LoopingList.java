@@ -21,16 +21,36 @@ public class LoopingList<E> extends ArrayList<E> {
         return super.get(index);
     }
     
+    @Override
+    public boolean add(E e) {
+    	// add a new element and update the last inserted index
+    	boolean added = super.add(e);
+    	if (added)
+    		lastInserted = this.size() - 1;
+    	return added;
+    };
+    
+    @Override
+    public void add(int index, E element) {
+    	super.add(index, element);
+    	lastInserted = index;
+    };
+    
+    int lastInserted = 0;
     public void insertBetween(int j, int k, E element)
     {
-    	// go from j to k in clockwise direction:
-    	int i = j+1;
-    	while (i != k)
+    	// go from k to j in counter-clockwise direction:
+    	int i = k+1;
+    	while (i != j)
     	{
     		this.remove(i);
     		i = (i+1) % this.size();
     	}
-    	this.add(j+1, element);
+    	this.add(k+1, element);
     }
     
+    public int getLastInserted()
+    {
+    	return lastInserted;
+    }
 }

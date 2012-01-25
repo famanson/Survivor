@@ -1,5 +1,7 @@
 package entities;
 
+import geometry.Geometry;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -100,10 +102,10 @@ public class Survivor extends Light {
 				break;
 			Vec2 point1 = points.get(i);
 			Vec2 point2 = points.get((i+1)%points.size());
-			if (distance(pos, point1, point2) < 20)
+			if (Geometry.distance(pos, point1, point2) < 20)
 			{
-				if ((point1.x == point2.x & inBetween(pos.y, point1.y, point2.y)) 
-						|| (point1.y == point2.y & inBetween(pos.x, point1.x, point2.x)))
+				if ((point1.x == point2.x & Geometry.inBetween(pos.y, point1.y, point2.y)) 
+						|| (point1.y == point2.y & Geometry.inBetween(pos.x, point1.x, point2.x)))
 				{
 					col++;
 					collidedBlock = block;
@@ -118,32 +120,6 @@ public class Survivor extends Light {
 		collidedBlock = null;
 		return false;
 		//float i1 = (a.getY() - c.getY())*(d.getX() - c.getX()) - (a.getX() - c.getX())*(d.getY() - c.getY());
-	}
-	
-	public static boolean inBetween(float p, float e1, float e2)
-	{
-		if (p < e1)
-		{
-			return p >= e2;
-		}
-		else
-		{
-			return p < e2;
-		}
-	}
-	
-	public static float distance (Vec2 pos, Vec2 end1, Vec2 end2)
-	{
-		// Find the distance from pos to line end1-end2:
-		// 1. find (2x)area of the triangle constructed by the 3 points:
-		// (which is given by the determinant)
-		float doubleArea = Math.abs(pos.x*end1.y - pos.y*end1.x + end1.x*end2.y - end1.y*end2.x + end2.x*pos.y - end2.y*pos.x);
-		
-		// 2. find distance from end1 to end2:
-		Vec2 distVector = end1.sub(end2);
-		float dist = distVector.length();
-		
-		return (doubleArea/dist);
 	}
 	
 	float intensity = LightTest.DEFAULT_INTENSITY;
