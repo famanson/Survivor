@@ -7,7 +7,6 @@ import java.util.TreeSet;
 
 import light.LoopingList;
 import light.Vec2;
-import map_entities.Map.PointComparator;
 
 public class Geometry {
 	public static boolean left(Vec2 v1, Vec2 v2, Vec2 v3)
@@ -88,15 +87,4 @@ public class Geometry {
 		return newPoints;
 	}
 	
-	private class PointComparator implements Comparator<Vec2>
-	{
-		@Override
-		public int compare(Vec2 v1, Vec2 v2) {
-			if (v1.x == v2.x)
-				return 0;
-			else if (v1.x > v2.x)
-				return 1;
-			else return -1;
-		}
-	}
 }
